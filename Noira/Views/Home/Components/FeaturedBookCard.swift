@@ -13,7 +13,7 @@ struct FeaturedBookCard: View {
     @State private var dominantColor: Color = Color.black
     
     var body: some View {
-        NavigationLink(value: book) {
+        NavigationLink(value: Destination.detail(book)) {
             VStack(alignment: .leading, spacing: 0) {
                 // Cover with gradient overlay
                 ZStack(alignment: .bottom) {

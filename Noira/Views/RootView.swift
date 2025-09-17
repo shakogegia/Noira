@@ -8,22 +8,45 @@
 import SwiftUI
 
 struct RootView: View {
-    @State private var path: [Destination] = []
 
     var body: some View {
-        NavigationStack(path: $path) {
-            HomeView()
+        NavigationStack {
+            TabView {
+                // Library
+                LibraryView()
+                    .tabItem {
+                        Text("Library")
+                    }
+
+                // Now Playing
+                LibraryView()
+                    .tabItem {
+                        Label("Now Playing", systemImage: "waveform")
+                    }
+
+                // Settings
+                SettingsView()
+                    .tabItem {
+                        Text("Settings")
+                    }
+
+                // Search
+                SearchView()
+                    .tabItem {
+                        Image(systemName: "magnifyingglass")
+                    }
+            }
             .navigationDestination(for: Destination.self) { destination in
                 switch destination {
                 case .detail(let book):
                     BookDetailView(book: book)
                 case .search:
-                    LoginView()
+                    SearchView()
                 case .settings:
-                    LoginView()
+                    SettingsView()
                 }
             }
         }
     }
-    
+
 }

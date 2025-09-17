@@ -40,7 +40,6 @@ struct BookSection: View {
             // Section Header (title only)
             Text(title)
                 .font(.headline)
-                .foregroundColor(.white)
                 .padding(.horizontal)
             
             // Books Scroll with See All at the end
@@ -68,7 +67,11 @@ struct BookSection: View {
                     }
                     .padding(.horizontal)
                     .padding(.vertical, cardStyle == .featured ? 15 : 10)
+                    .buttonStyle(.borderless)
                 }
+                
+                .scrollClipDisabled()
+                .buttonStyle(.borderless)
             } else {
                 Text("No books available")
                     .foregroundColor(.gray)

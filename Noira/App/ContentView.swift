@@ -13,7 +13,8 @@ struct ContentView: View {
     var body: some View {
         Group {
             if authService.isAuthenticated {
-                HomeView()
+                RootView()
+                    .environmentObject(authService)
             } else {
                 LoginView()
                     .environmentObject(authService)

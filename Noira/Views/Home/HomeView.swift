@@ -13,77 +13,74 @@ struct HomeView: View {
     @State private var showingRecentlyAdded = false
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 40) {
-                    
-                    HStack {
-                        Button(action: {
-                            
-                        }) {
-                            Image(systemName: "magnifyingglass")
-                        }
-                        .buttonStyle(.plain)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 40) {
+                HStack {
+                    Button(action: {
                         
-                        Spacer()
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Spacer()
+                    
+                    Button(action: {
                         
-                        Button(action: {
-                            
-                        }) {
-                            Image(systemName: "gear")
-                        }
-                        .buttonStyle(.plain)
+                    }) {
+                        Image(systemName: "gear")
                     }
-                    .focusSection()
-                    
-                    // Continue Reading Section
-                    if !continueReadingBooks.isEmpty {
-                        BookSection(
-                            title: "Continue where you left off",
-                            books: continueReadingBooks,
-                            maxItems: 3,
-                            cardStyle: .featured
-                        ) {
-                            // TODO: Navigate to continue reading view
-                            print("See all continue reading")
-                        }
-                        .focusSection()
-                    }
-                    
-                    // Recently Added Section
+                    .buttonStyle(.plain)
+                }
+                .focusSection()
+                
+                // Continue Reading Section
+                if !continueReadingBooks.isEmpty {
                     BookSection(
-                        title: "Recently added",
-                        books: recentlyAddedBooks,
-                        maxItems: 6,
-                        cardStyle: .standard
+                        title: "Continue where you left off",
+                        books: continueReadingBooks,
+                        maxItems: 3,
+                        cardStyle: .featured
                     ) {
-                        showingRecentlyAdded = true
-                    }
-                    .focusSection()
-                    
-                    // Your Library Section
-                    BookSection(
-                        title: "Your library",
-                        books: books,
-                        maxItems: 8,
-                        cardStyle: .standard
-                    ) {
-                        showingLibrary = true
+                        // TODO: Navigate to continue reading view
+                        print("See all continue reading")
                     }
                     .focusSection()
                 }
-                .padding(.vertical)
+                
+                // Recently Added Section
+                BookSection(
+                    title: "Recently added",
+                    books: recentlyAddedBooks,
+                    maxItems: 6,
+                    cardStyle: .standard
+                ) {
+                    showingRecentlyAdded = true
+                }
+                .focusSection()
+                
+                // Your Library Section
+                BookSection(
+                    title: "Your library",
+                    books: books,
+                    maxItems: 8,
+                    cardStyle: .standard
+                ) {
+                    showingLibrary = true
+                }
+                .focusSection()
             }
-            .navigationDestination(for: Book.self) { book in
-                BookDetailView(book: book)
-            }
+            .padding(.vertical)
+        }
+        .navigationDestination(for: Book.self) { book in
+            BookDetailView(book: book)
         }
         // Navigation sheets
         .fullScreenCover(isPresented: $showingLibrary) {
-            BookGridView(title: "Your Library", books: books)
+            BookGridView(books: books)
         }
         .fullScreenCover(isPresented: $showingRecentlyAdded) {
-            BookGridView(title: "Recently Added", books: recentlyAddedBooks)
+            BookGridView(books: recentlyAddedBooks)
         }
     }
     

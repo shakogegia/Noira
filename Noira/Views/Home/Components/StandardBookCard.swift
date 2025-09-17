@@ -9,41 +9,21 @@ import SwiftUI
 
 struct StandardBookCard: View {
     let book: Book
+    
     @FocusState private var isFocused: Bool
     
     var body: some View {
-        NavigationLink(value: book) {
+        NavigationLink(value: Destination.detail(book)) {
             VStack(alignment: .leading, spacing: 8) {
-                // Cover Image
-                AsyncImage(url: URL(string: book.coverImageURL ?? "")) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 160, height: 160)
-                        .clipped()
-                } placeholder: {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 160, height: 160)
-                        .overlay(
-                            Image(systemName: "book.pages.fill")
-                                .font(.system(size: 40))
-                                .foregroundColor(Color.gray.opacity(0.6))
-                                .hoverEffectDisabled(true)
-                        )
-                }
-                .cornerRadius(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.white, lineWidth: isFocused ? 3 : 0)
-                )
+                // Cover
+                SquareBookCover(url: book.coverImageURL, size: 240, radius: 12)
+                    .hoverEffect(.highlight)
                 
-                // Book Information
+                // Information
                 VStack(alignment: .leading, spacing: 4) {
                     Text(book.title)
-                        .font(.caption)
+                        .font(.caption2)
                         .fontWeight(.medium)
-                        .foregroundColor(.white)
                         .lineLimit(1)
                     
                     Text(book.authors.map(\.name).joined(separator: ", "))
@@ -52,19 +32,49 @@ struct StandardBookCard: View {
                         .lineLimit(1)
                 }
                 .frame(width: 160, alignment: .leading)
+                // if is focused move down a bit with animation
+                .offset(y: isFocused ? 16 : 0)
             }
-            .scaleEffect(isFocused ? 1.03 : 1.0)
-            .animation(.easeInOut(duration: 0.15), value: isFocused)
         }
         .focused($isFocused)
         .buttonStyle(.borderless)
-        
+    }
+}
+
+struct CardOverlayLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack(alignment: .bottomLeading) {
+            configuration.icon
+//                .resizable()
+                .aspectRatio(400/240, contentMode: .fit)
+                .overlay {
+                    LinearGradient(
+                        stops: [
+                            .init(color: .black.opacity(0.6), location: 0.1),
+                            .init(color: .black.opacity(0.2), location: 0.25),
+                            .init(color: .black.opacity(0), location: 0.4)
+                        ],
+                        startPoint: .bottom, endPoint: .top
+                    )
+                }
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(lineWidth: 2)
+                        .foregroundStyle(.quaternary)
+                }
+
+
+            configuration.title
+                .font(.caption.bold())
+                .foregroundStyle(.secondary)
+                .padding(6)
+        }
+        .frame(maxWidth: 400)
     }
 }
 
 #Preview("Single Card") {
     StandardBookCard(book: Book.sampleBooks[0])
-        .background(Color.black)
         .padding()
 }
 
@@ -74,7 +84,6 @@ struct StandardBookCard: View {
             StandardBookCard(book: book)
         }
     }
-    .background(Color.black)
     .padding()
 }
 
@@ -84,6 +93,5 @@ struct StandardBookCard: View {
             StandardBookCard(book: book)
         }
     }
-    .background(Color.black)
     .padding()
 }
