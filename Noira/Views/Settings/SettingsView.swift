@@ -12,6 +12,7 @@ struct SettingsView: View {
     
     @State var showPreview: Bool = false
     @State var theme: Theme = .dark
+    @State var showLogoutAlert: Bool = false
     
     var body: some View {
         HStack(alignment: .center) {
@@ -69,16 +70,23 @@ struct SettingsView: View {
                     
                     Section(header: Text("User")) {
                         Button(role: .destructive, action: {
-                            authService.logout()
+                            showLogoutAlert = true
                         }, label: {
                             Text("Log out")
-                            // call Authnti
                         })
                     }
                 }
                 .padding(.all)
                 .scrollClipDisabled()
             }
+        }
+        .alert("Log Out", isPresented: $showLogoutAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Log Out", role: .destructive) {
+                authService.logout()
+            }
+        } message: {
+            Text("Are you sure you want to log out?")
         }
     }
 }
