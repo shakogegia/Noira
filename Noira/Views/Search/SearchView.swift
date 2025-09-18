@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @State private var books = Book.sampleBooks
+    @StateObject private var absLibraryService = ABSLibraryService()
 
     @State var searchTerm: String = ""
 
@@ -23,21 +23,34 @@ struct SearchView: View {
                     Text(suggestion)
                 }
             }
+            .task {
+                await absLibraryService.fetchLibraryItems()
+            }
     }
 
     private var filteredBooks: [Book] {
         if searchTerm.isEmpty {
-            return books
+            return absLibraryService.books
         }
 
-        return books.filter {
-            $0.title.localizedLowercase.contains(searchTerm.localizedLowercase)
+        return absLibraryService.books.filter { book in
+            let searchTermLower = searchTerm.localizedLowercase
+            
+            // Search in title
+            let titleMatches = book.title.localizedLowercase.contains(searchTermLower)
+            
+            // Search in authors
+            let authorMatches = book.authors.contains { author in
+                author.name.localizedLowercase.contains(searchTermLower)
+            }
+            
+            return titleMatches || authorMatches
         }
     }
 
     private var suggestedSearchTerms: [String] {
         // If there's no search term yet, suggest a few popular/recent titles from the catalog
-        let titles = books.map { $0.title }
+        let titles = absLibraryService.books.map { $0.title }
         if searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             // Return up to 8 unique titles as generic suggestions
             return Array(Set(titles)).prefix(8).map { String($0) }
