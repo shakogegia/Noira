@@ -3,3 +3,7 @@
     <h1>Noira</h1>
    <h5>Audiobookshelf client app for Apple TV / tvOS</h5>
 </div>
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
