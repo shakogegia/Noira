@@ -60,7 +60,7 @@ struct LoginView: View {
                         .font(.body)
                         
 
-                    TextField("Server URL: https://abs.example.com", text: $serverURL)
+                    TextField("Server URL", text: $serverURL)
                         .keyboardType(.URL)
                         .padding()
                         .frame(maxWidth: 600)
