@@ -1,0 +1,15 @@
+{
+  "originHash" : "c61046fc68dae8880b1a606da5f32d5050dc0fc75c17c17642187dba807f2745",
+  "pins" : [
+    {
+      "identity" : "attributedtext",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Iaenhaall/AttributedText.git",
+      "state" : {
+        "revision" : "26a8be0285d664449e352d0e9b1b4a79ee9cecba",
+        "version" : "1.2.0"
+      }
+    }
+  ],
+  "version" : 3
+}

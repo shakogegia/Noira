@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AttributedText
 
 struct BookDetailView: View {
     let book: Book
@@ -115,7 +116,7 @@ struct BookDetailView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
 
-                            Text(book.description)
+                            AttributedText(book.description)
                         }
                     }
                 }
