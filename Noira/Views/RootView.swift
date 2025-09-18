@@ -19,7 +19,7 @@ struct RootView: View {
                     }
 
                 // Now Playing
-                LibraryView()
+                NowPlayingView()
                     .tabItem {
                         Label("Now Playing", systemImage: "waveform")
                     }

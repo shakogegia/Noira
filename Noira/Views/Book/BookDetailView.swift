@@ -10,6 +10,7 @@ import SwiftUI
 struct BookDetailView: View {
     let book: Book
     @State private var dominantColor: Color = Color.clear
+    @State private var vibrantColor: Color = Color.clear
 
     var body: some View {
         ZStack {
@@ -17,7 +18,7 @@ struct BookDetailView: View {
             LinearGradient(
                 gradient: Gradient(colors: [
                     dominantColor.opacity(1),
-                    Color.clear
+                    vibrantColor.opacity(1),
                 ]),
                 startPoint: .top,
                 endPoint: .bottom
@@ -135,11 +136,13 @@ struct BookDetailView: View {
                 let url = URL(string: urlString),
                 let data = try? Data(contentsOf: url),
                 let uiImage = UIImage(data: data),
-                let color = uiImage.averageSwiftUIColor
+                let prominent = uiImage.prominentSwiftUIColor,
+                let vibrant = uiImage.vibrantSwiftUIColor
             {
 
                 DispatchQueue.main.async {
-                    dominantColor = color
+                    dominantColor = prominent
+                    vibrantColor = vibrant
                 }
             }
         }
