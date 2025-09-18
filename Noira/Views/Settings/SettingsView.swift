@@ -10,6 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var authService: AuthenticationService
     
+    @StateObject private var userDefaults = UserDefaultsService.shared
+    
     @State var showPreview: Bool = false
     @State var theme: Theme = .dark
     @State var showLogoutAlert: Bool = false
@@ -69,10 +71,16 @@ struct SettingsView: View {
                     
                     
                     Section(header: Text("User")) {
+                        Button(action: {}) {
+                            Text(userDefaults.username ?? "Username")
+                        }
+                        .disabled(true)
+                        
+                        
                         Button(role: .destructive, action: {
                             showLogoutAlert = true
                         }, label: {
-                            Text("Log out")
+                            Text("Sign out")
                         })
                     }
                 }
@@ -80,9 +88,9 @@ struct SettingsView: View {
                 .scrollClipDisabled()
             }
         }
-        .alert("Log Out", isPresented: $showLogoutAlert) {
+        .alert("Sign out", isPresented: $showLogoutAlert) {
             Button("Cancel", role: .cancel) { }
-            Button("Log Out", role: .destructive) {
+            Button("Sign out", role: .destructive) {
                 authService.logout()
             }
         } message: {

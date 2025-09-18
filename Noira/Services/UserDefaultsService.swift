@@ -5,42 +5,53 @@
 //  Created by Shalva Gegia on 15/09/2025.
 //
 
+import Combine
 import Foundation
 
-class UserDefaultsService {
+class UserDefaultsService: ObservableObject {
     private let serverURLKey = "abs_server_url"
     private let usernameKey = "abs_username"
     private let tokenKey = "abs_auth_token"
-    private let selectedLibraryKey = "selected_library_id"
-    
+    private let libraryIdKey = "library_id"
+
     static let shared = UserDefaultsService()
-    
-    private init() {}
-    
-    var serverURL: String? {
-        get { UserDefaults.standard.string(forKey: serverURLKey) }
-        set { UserDefaults.standard.set(newValue, forKey: serverURLKey) }
+
+    private init() {
+        // Initialize published properties from UserDefaults
+        self.serverURL = UserDefaults.standard.string(forKey: serverURLKey)
+        self.username = UserDefaults.standard.string(forKey: usernameKey)
+        self.authToken = UserDefaults.standard.string(forKey: tokenKey)
+        self.libraryId = UserDefaults.standard.string(forKey: libraryIdKey)
     }
-    
-    var username: String? {
-        get { UserDefaults.standard.string(forKey: usernameKey) }
-        set { UserDefaults.standard.set(newValue, forKey: usernameKey) }
+
+    @Published var serverURL: String? {
+        didSet {
+            UserDefaults.standard.set(serverURL, forKey: serverURLKey)
+        }
     }
-    
-    var authToken: String? {
-        get { UserDefaults.standard.string(forKey: tokenKey) }
-        set { UserDefaults.standard.set(newValue, forKey: tokenKey) }
+
+    @Published var username: String? {
+        didSet {
+            UserDefaults.standard.set(username, forKey: usernameKey)
+        }
     }
-    
-    var selectedLibraryId: String? {
-        get { UserDefaults.standard.string(forKey: selectedLibraryKey) }
-        set { UserDefaults.standard.set(newValue, forKey: selectedLibraryKey) }
+
+    @Published var authToken: String? {
+        didSet {
+            UserDefaults.standard.set(authToken, forKey: tokenKey)
+        }
     }
-    
+
+    @Published var libraryId: String? {
+        didSet {
+            UserDefaults.standard.set(libraryId, forKey: libraryIdKey) // Fixed: was using serverURLKey
+        }
+    }
+
     func clearAll() {
         UserDefaults.standard.removeObject(forKey: serverURLKey)
         UserDefaults.standard.removeObject(forKey: usernameKey)
         UserDefaults.standard.removeObject(forKey: tokenKey)
-        UserDefaults.standard.removeObject(forKey: selectedLibraryKey)
+        UserDefaults.standard.removeObject(forKey: libraryIdKey)
     }
 }

@@ -60,7 +60,7 @@ struct LoginView: View {
                         .font(.body)
                         
 
-                    TextField("Server URL", text: $serverURL)
+                    TextField("Server URL: https://abs.example.com", text: $serverURL)
                         .keyboardType(.URL)
                         .padding()
                         .frame(maxWidth: 600)
@@ -107,15 +107,18 @@ struct LoginView: View {
     }
 
     private func handleLogin() async {
-        let success = await authService.login(
+        let result = await authService.login(
             serverURL: serverURL,
             username: username,
             password: password
         )
 
-        if !success {
-            alertMessage =
-                "Failed to connect to server. Please check your credentials."
+        switch result {
+        case .success:
+            // Login successful, authentication service will handle state updates
+            break
+        case .failure(let error):
+            alertMessage = error.localizedDescription
             showingAlert = true
         }
     }
