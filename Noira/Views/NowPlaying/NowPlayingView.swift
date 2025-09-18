@@ -9,17 +9,22 @@ import SwiftUI
 
 struct NowPlayingView: View {
     @State private var book = Book.sampleBooks[0]
-    @State private var dominantColor: Color = Color.clear
+    @State private var prominentColor: Color = Color.clear
+    @State private var vibrantColor: Color = Color.clear
+    @State private var secondaryColor: Color = Color.clear
+    
 
     var body: some View {
         ZStack {
             // Background
             LinearGradient(
                 gradient: Gradient(colors: [
-                    dominantColor.opacity(1),
+                    vibrantColor,
+                    prominentColor,
+                    secondaryColor,
                 ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                startPoint: .top,
+                endPoint: .bottom
             )
             .edgesIgnoringSafeArea(.all)
 
@@ -32,7 +37,7 @@ struct NowPlayingView: View {
                     )
                     .shadow(radius: 12)
                     .onAppear {
-                        extractDominantColor()
+                        extractColors()
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -41,7 +46,7 @@ struct NowPlayingView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private func extractDominantColor() {
+    private func extractColors() {
         // Convert SwiftUI Image to UIImage and extract colors
         DispatchQueue.global(qos: .background).async {
             // This is a simplified approach - in reality you'd need to
@@ -53,9 +58,13 @@ struct NowPlayingView: View {
                 let uiImage = UIImage(data: data)
             {
                 let prominent = uiImage.prominentSwiftUIColor
+                let vibrant = uiImage.vibrantSwiftUIColor
+                let secondary = uiImage.secondarySwiftUIColor
                 
                 DispatchQueue.main.async {
-                    dominantColor = prominent ?? Color.clear
+                    prominentColor = prominent ?? .clear
+                    vibrantColor = vibrant ?? .clear
+                    secondaryColor = secondary ?? .clear
                 }
             }
         }

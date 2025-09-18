@@ -9,20 +9,23 @@ import SwiftUI
 
 struct BookDetailView: View {
     let book: Book
-    @State private var dominantColor: Color = Color.clear
+    @State private var prominentColor: Color = Color.clear
     @State private var vibrantColor: Color = Color.clear
+    @State private var secondaryColor: Color = Color.clear
 
     var body: some View {
         ZStack {
             // Background
             LinearGradient(
                 gradient: Gradient(colors: [
-                    dominantColor.opacity(1),
-                    vibrantColor.opacity(1),
+                    secondaryColor,
+                    prominentColor,
+                    vibrantColor,
                 ]),
                 startPoint: .top,
                 endPoint: .bottom
             )
+            .edgesIgnoringSafeArea(.all)
 
             HStack(alignment: .center, spacing: 100) {
                 VStack(alignment: .trailing, spacing: 48) {
@@ -122,12 +125,12 @@ struct BookDetailView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: [.all])
         .onAppear{
-            extractDominantColor()
+            extractColors()
         }
     }
 
-    private func extractDominantColor() {
-        // Convert SwiftUI Image to UIImage and extract color
+    private func extractColors() {
+        // Convert SwiftUI Image to UIImage and extract colors
         DispatchQueue.global(qos: .background).async {
             // This is a simplified approach - in reality you'd need to
             // convert the SwiftUI Image to UIImage properly
@@ -135,14 +138,16 @@ struct BookDetailView: View {
             if let urlString = book.coverImageURL,
                 let url = URL(string: urlString),
                 let data = try? Data(contentsOf: url),
-                let uiImage = UIImage(data: data),
-                let prominent = uiImage.prominentSwiftUIColor,
-                let vibrant = uiImage.vibrantSwiftUIColor
+                let uiImage = UIImage(data: data)
             {
-
+                let prominent = uiImage.prominentSwiftUIColor
+                let vibrant = uiImage.vibrantSwiftUIColor
+                let secondary = uiImage.secondarySwiftUIColor
+                
                 DispatchQueue.main.async {
-                    dominantColor = prominent
-                    vibrantColor = vibrant
+                    prominentColor = prominent ?? .clear
+                    vibrantColor = vibrant ?? .clear
+                    secondaryColor = secondary ?? .clear
                 }
             }
         }
