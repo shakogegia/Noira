@@ -30,7 +30,8 @@ struct SampleData {
             duration: 36000, // 10 hours
             coverImageURL: "https://www.graphicaudiointernational.net/media/catalog/product/cache/0164cd528593768540930b5b640a411b/r/e/red_rising_saga_1_red_rising_1_of_2_1.jpg",
             progress: 0.7,
-            lastPlayedDate: Date().addingTimeInterval(-3600) // 1 hour ago
+            lastPlayedDate: Date().addingTimeInterval(-3600), // 1 hour ago
+            addedAt: Date().addingTimeInterval(-86400) // 1 day ago
         ),
     ]
 }
@@ -48,7 +49,8 @@ extension Book {
             duration: 36000, // 10 hours
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/a3940781-61c5-40a0-a3d8-85a683b00180/cover?ts=1757516905307&raw=1",
             progress: 0.7,
-            lastPlayedDate: Date().addingTimeInterval(-3600) // 1 hour ago
+            lastPlayedDate: Date().addingTimeInterval(-3600), // 1 hour ago
+            addedAt: Date().addingTimeInterval(-86400) // 1 day ago
         ),
         Book(
             id: "2",
@@ -60,7 +62,8 @@ extension Book {
             duration: 75600, // 21 hours
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/6f22d592-fb54-42d0-bc63-563b136b8f0f/cover?ts=1739203911222&raw=1",
             progress: 0.0,
-            lastPlayedDate: nil
+            lastPlayedDate: nil,
+            addedAt: Date().addingTimeInterval(-172800) // 2 days ago
         ),
         Book(
             id: "3",
@@ -72,7 +75,8 @@ extension Book {
             duration: 57600, // 16 hours
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/ac511d8d-6a92-45e5-a302-2093a920c37e/cover?ts=1746015572644&raw=1",
             progress: 0.7,
-            lastPlayedDate: Date().addingTimeInterval(-3600) // 1 hour ago
+            lastPlayedDate: Date().addingTimeInterval(-3600), // 1 hour ago
+            addedAt: Date().addingTimeInterval(-259200) // 3 days ago
         ),
         Book(
             id: "4",
@@ -84,7 +88,8 @@ extension Book {
             duration: 40000, // ~11 hours
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/713007db-0cce-4b4d-8b56-fa5b393e749e/cover?ts=1757516905396&raw=1",
             progress: 0.1,
-            lastPlayedDate: Date().addingTimeInterval(-172800) // 2 days ago
+            lastPlayedDate: Date().addingTimeInterval(-172800), // 2 days ago
+            addedAt: Date().addingTimeInterval(-345600) // 4 days ago
         ),
         Book(
             id: "5",
@@ -96,7 +101,8 @@ extension Book {
             duration: 67800, // ~18.8 hours
             coverImageURL: nil,
             progress: 0.5,
-            lastPlayedDate: Date().addingTimeInterval(-7200) // 2 hours ago
+            lastPlayedDate: Date().addingTimeInterval(-7200), // 2 hours ago
+            addedAt: Date().addingTimeInterval(-432000) // 5 days ago
         ),
         Book(
             id: "6",
@@ -108,7 +114,8 @@ extension Book {
             duration: 42000, // ~11.6 hours
             coverImageURL: nil,
             progress: 0.9,
-            lastPlayedDate: Date().addingTimeInterval(-300000) // ~3.5 days ago
+            lastPlayedDate: Date().addingTimeInterval(-300000), // ~3.5 days ago
+            addedAt: Date().addingTimeInterval(-518400) // 6 days ago
         ),
         Book(
             id: "7",
@@ -120,11 +127,12 @@ extension Book {
             duration: 43200, // 12 hours
             coverImageURL: nil,
             progress: 0.2,
-            lastPlayedDate: nil
+            lastPlayedDate: nil,
+            addedAt: Date().addingTimeInterval(-604800) // 7 days ago
         ),
         Book(
             id: "8",
-            title: "Harry Potter and the Sorcerer’s Stone",
+            title: "Harry Potter and the Sorcerer's Stone",
             authors: [Author(id: "1", name: "J.K. Rowling")],
             narrators: ["Jim Dale"],
             genres: ["Fantasy", "Young Adult"],
@@ -132,7 +140,8 @@ extension Book {
             duration: 28800, // 8 hours
             coverImageURL: nil,
             progress: 0.65,
-            lastPlayedDate: Date().addingTimeInterval(-600) // 10 minutes ago
+            lastPlayedDate: Date().addingTimeInterval(-600), // 10 minutes ago
+            addedAt: Date().addingTimeInterval(-691200) // 8 days ago
         )
     ]
 }

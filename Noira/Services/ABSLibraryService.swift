@@ -80,7 +80,7 @@ class ABSLibraryService: ObservableObject {
     }
     
     private func convertToBooks(from items: [ABSLibraryItem], serverURL: String) -> [Book] {
-        return items.compactMap { item in
+        let books = items.compactMap { item -> Book? in
             // Only process book media types
             guard item.mediaType == "book" else { return nil }
             
@@ -114,6 +114,9 @@ class ABSLibraryService: ObservableObject {
                 coverImageURL = nil
             }
             
+            // Convert addedAt from milliseconds timestamp to Date
+            let addedAt = Date(timeIntervalSince1970: TimeInterval(item.addedAt) / 1000)
+            
             return Book(
                 id: item.id,
                 title: metadata.title,
@@ -124,8 +127,12 @@ class ABSLibraryService: ObservableObject {
                 duration: item.media.duration ?? 0,
                 coverImageURL: coverImageURL,
                 progress: 0.0, // We'll need to fetch progress separately if needed
-                lastPlayedDate: nil // We'll need to fetch this separately if needed
+                lastPlayedDate: nil, // We'll need to fetch this separately if needed
+                addedAt: addedAt
             )
         }
+        
+        // Sort by addedAt descending (newest first)
+        return books.sorted { ($0.addedAt ?? .distantPast) > ($1.addedAt ?? .distantPast) }
     }
 }

@@ -18,9 +18,10 @@ struct Book: Codable, Identifiable, Hashable {
     let coverImageURL: String?
     let progress: Double // 0.0 to 1.0
     let lastPlayedDate: Date?
+    let addedAt: Date?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, authors, narrators, genres, description, duration, progress
+        case id, title, authors, narrators, genres, description, duration, progress, addedAt
         case coverImageURL = "coverPath"
         case lastPlayedDate = "lastPlayed"
     }
