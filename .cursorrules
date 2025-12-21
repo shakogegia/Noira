@@ -1,0 +1,139 @@
+# Noira - Cursor Rules
+
+## Project Context
+This is **Noira**, an Apple TV (tvOS) client app for Audiobookshelf written in SwiftUI. The developer is a SwiftUI beginner.
+
+## Code Style
+
+### Swift Conventions
+- Use Swift 5+ syntax and features
+- Prefer `let` over `var` when possible
+- Use trailing closure syntax
+- Use property wrappers appropriately (@State, @StateObject, @Published, etc.)
+
+### SwiftUI Patterns
+- Views should be small and composable
+- Extract reusable components to `Views/Shared/Components/`
+- Use `@StateObject` when a view owns the observable object
+- Use `@EnvironmentObject` for dependency injection across view hierarchy
+- Always include SwiftUI `#Preview` blocks for visual testing
+
+### Naming Conventions
+- Views: `SomethingView.swift`
+- Components: Descriptive noun (e.g., `SquareBookCover.swift`)
+- Services: `SomethingService.swift`
+- API models: Prefix with `ABS` (e.g., `ABSLoginResponse`)
+- Extensions: `Type+Extensions.swift`
+
+## Architecture
+
+### Services
+- Services are `@MainActor class` conforming to `ObservableObject`
+- Services manage: network calls, state (`isLoading`, `error`, data), data transformation
+- Use `async/await` for network operations
+- Define error enums conforming to `LocalizedError`
+
+### Models
+- App models in `Models/` (e.g., `Book.swift`)
+- API response models in `Models/ABS/` with `ABS` prefix
+- Models should conform to `Codable`, `Identifiable`, `Hashable` as needed
+
+### Navigation
+- Use `NavigationStack` with `TabView`
+- Define destinations in `Destination` enum
+- Use `NavigationLink(value:)` pattern
+
+## tvOS Specifics
+
+### Focus System
+- Always consider focus navigation with Siri Remote
+- Use `@FocusState` for focus tracking
+- Apply `.hoverEffect(.highlight)` on interactive elements
+- Use `.focusSection()` to group focusable items
+
+### UI Guidelines
+- Design for 10-foot viewing distance
+- Use large, readable fonts
+- Provide visual feedback on focus
+- Use horizontal layouts for forms (HStack with vertical divider)
+
+## API Integration
+
+### Audiobookshelf API
+- Base URL stored in UserDefaults as `serverURL`
+- Auth token in `Authorization: Bearer {token}` header
+- All requests include `Content-Type: application/json`
+
+### Common Endpoints
+- `POST /login` - Authentication
+- `GET /api/me` - Validate token
+- `GET /api/libraries/{id}/items` - Fetch books
+- Cover images: `/audiobookshelf/api/items/{id}/cover`
+
+## File Structure
+
+```
+Noira/
+├── App/           → App entry, ContentView
+├── Models/        → Data models
+│   └── ABS/       → API response models
+├── Navigation/    → Navigation types
+├── Services/      → Business logic
+├── Utilities/     → Extensions
+└── Views/         → UI components
+    ├── Authentication/
+    ├── Book/
+    ├── Home/
+    ├── Library/
+    ├── NowPlaying/
+    ├── Search/
+    ├── Settings/
+    └── Shared/Components/
+```
+
+## When Writing Code
+
+### DO:
+- Add file headers with name, project, date
+- Handle loading, error, and empty states in views
+- Use sample data (`Book.sampleBooks`) for previews
+- Keep services focused on single responsibility
+- Use meaningful error messages in error enums
+- Test on Apple TV simulator
+
+### DON'T:
+- Put business logic in Views
+- Use force unwrapping without good reason
+- Ignore async/await patterns
+- Create deeply nested view hierarchies
+- Forget to handle optional coverImageURL
+
+## Common Tasks
+
+### Adding a new view:
+1. Create file in appropriate `Views/` subdirectory
+2. Add navigation case to `Destination` enum if needed
+3. Wire up in `RootView` navigationDestination
+4. Include `#Preview` blocks
+
+### Adding API endpoint:
+1. Create response model in `Models/ABS/`
+2. Add method to existing service or create new service
+3. Handle with error enum cases
+4. Transform API model to app model
+
+### Creating a component:
+1. Create in `Views/Shared/Components/`
+2. Make it reusable with parameters
+3. Handle edge cases (nil images, empty arrays)
+4. Add multiple preview variants
+
+## Dependencies
+- AttributedText (for HTML rendering in descriptions)
+
+## Helpful Context
+- The user is learning SwiftUI - provide explanations when helpful
+- Audiobookshelf API docs: https://api.audiobookshelf.org/
+- Focus on tvOS best practices and accessibility
+- Keep code simple and readable over clever
+
