@@ -8,6 +8,6 @@
 import Foundation
 
 struct Library: Codable, Identifiable, Hashable {
-    let id: Int
+    let id: String
     let name: String
 }

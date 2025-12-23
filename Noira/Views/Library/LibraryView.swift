@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LibraryView: View {
-    @StateObject private var absLibraryService = ABSLibraryService()
+    @EnvironmentObject var absLibraryService: ABSLibraryService
 
     var body: some View {
         Group {

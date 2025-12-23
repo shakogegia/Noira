@@ -10,8 +10,8 @@ import Foundation
 
 struct SampleData {
     static let libraries: [Library] = [
-        Library(id: 1, name: "NAS"),
-        Library(id: 2, name: "My Library")
+        Library(id: "1", name: "NAS"),
+        Library(id: "2", name: "My Library")
     ]
     
     static let authors: [Author] = [
@@ -23,6 +23,7 @@ struct SampleData {
         Book (
             id: "1",
             title: "Red Rising",
+            subtitle: nil,
             authors: [ authors[1] ],
             narrators: ["Jenna Sharpe"],
             genres: ["Fantasy", "Adventure"],
@@ -31,7 +32,10 @@ struct SampleData {
             coverImageURL: "https://www.graphicaudiointernational.net/media/catalog/product/cache/0164cd528593768540930b5b640a411b/r/e/red_rising_saga_1_red_rising_1_of_2_1.jpg",
             progress: 0.7,
             lastPlayedDate: Date().addingTimeInterval(-3600), // 1 hour ago
-            addedAt: Date().addingTimeInterval(-86400) // 1 day ago
+            addedAt: Date().addingTimeInterval(-86400), // 1 day ago
+            publisher: nil,
+            publishedYear: nil,
+            series: nil
         ),
     ]
 }
@@ -42,6 +46,7 @@ extension Book {
         Book(
             id: "1",
             title: "The Hobbit",
+            subtitle: "or There and Back Again",
             authors: [Author(id: "1", name: "J.R.R. Tolkien")],
             narrators: ["Andy Serkis"],
             genres: ["Fantasy", "Adventure"],
@@ -50,11 +55,15 @@ extension Book {
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/a3940781-61c5-40a0-a3d8-85a683b00180/cover?ts=1757516905307&raw=1",
             progress: 0.7,
             lastPlayedDate: Date().addingTimeInterval(-3600), // 1 hour ago
-            addedAt: Date().addingTimeInterval(-86400) // 1 day ago
+            addedAt: Date().addingTimeInterval(-86400), // 1 day ago
+            publisher: "George Allen & Unwin",
+            publishedYear: "1937",
+            series: Serie(id: "middle-earth", name: "Middle-earth", sequence: "")
         ),
         Book(
             id: "2",
             title: "Dune",
+            subtitle: nil,
             authors: [Author(id: "1", name: "Frank Herbert")],
             narrators: ["Scott Brick", "Orlagh Cassidy", "Euan Morton"],
             genres: ["Science Fiction", "Epic"],
@@ -63,11 +72,15 @@ extension Book {
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/6f22d592-fb54-42d0-bc63-563b136b8f0f/cover?ts=1739203911222&raw=1",
             progress: 0.0,
             lastPlayedDate: nil,
-            addedAt: Date().addingTimeInterval(-172800) // 2 days ago
+            addedAt: Date().addingTimeInterval(-172800), // 2 days ago
+            publisher: "Chilton Books",
+            publishedYear: "1965",
+            series: Serie(id: "dune", name: "Dune", sequence: "1")
         ),
         Book(
             id: "3",
             title: "Project Hail Mary",
+            subtitle: nil,
             authors: [Author(id: "1", name: "Andy Weir")],
             narrators: ["Ray Porter"],
             genres: ["Science Fiction", "Thriller"],
@@ -76,11 +89,15 @@ extension Book {
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/ac511d8d-6a92-45e5-a302-2093a920c37e/cover?ts=1746015572644&raw=1",
             progress: 0.7,
             lastPlayedDate: Date().addingTimeInterval(-3600), // 1 hour ago
-            addedAt: Date().addingTimeInterval(-259200) // 3 days ago
+            addedAt: Date().addingTimeInterval(-259200), // 3 days ago
+            publisher: "Ballantine Books",
+            publishedYear: "2021",
+            series: nil
         ),
         Book(
             id: "4",
             title: "1984",
+            subtitle: nil,
             authors: [Author(id: "1", name: "George Orwell")],
             narrators: ["Simon Prebble"],
             genres: ["Dystopian", "Political Fiction"],
@@ -89,11 +106,15 @@ extension Book {
             coverImageURL: "https://audiobookshelf.wibautstraat.me/audiobookshelf/api/items/713007db-0cce-4b4d-8b56-fa5b393e749e/cover?ts=1757516905396&raw=1",
             progress: 0.1,
             lastPlayedDate: Date().addingTimeInterval(-172800), // 2 days ago
-            addedAt: Date().addingTimeInterval(-345600) // 4 days ago
+            addedAt: Date().addingTimeInterval(-345600), // 4 days ago
+            publisher: "Secker & Warburg",
+            publishedYear: "1949",
+            series: nil
         ),
         Book(
             id: "5",
             title: "Becoming",
+            subtitle: nil,
             authors: [Author(id: "1", name: "Michelle Obama")],
             narrators: ["Michelle Obama"],
             genres: ["Memoir", "Biography"],
@@ -102,11 +123,15 @@ extension Book {
             coverImageURL: nil,
             progress: 0.5,
             lastPlayedDate: Date().addingTimeInterval(-7200), // 2 hours ago
-            addedAt: Date().addingTimeInterval(-432000) // 5 days ago
+            addedAt: Date().addingTimeInterval(-432000), // 5 days ago
+            publisher: "Crown Publishing Group",
+            publishedYear: "2018",
+            series: nil
         ),
         Book(
             id: "6",
             title: "The Martian",
+            subtitle: nil,
             authors: [Author(id: "1", name: "Andy Weir")],
             narrators: ["R.C. Bray"],
             genres: ["Science Fiction", "Adventure"],
@@ -115,11 +140,15 @@ extension Book {
             coverImageURL: nil,
             progress: 0.9,
             lastPlayedDate: Date().addingTimeInterval(-300000), // ~3.5 days ago
-            addedAt: Date().addingTimeInterval(-518400) // 6 days ago
+            addedAt: Date().addingTimeInterval(-518400), // 6 days ago
+            publisher: "Crown Publishing Group",
+            publishedYear: "2011",
+            series: nil
         ),
         Book(
             id: "7",
             title: "Educated",
+            subtitle: "A Memoir",
             authors: [Author(id: "1", name: "Tara Westover")],
             narrators: ["Julia Whelan"],
             genres: ["Memoir", "Nonfiction"],
@@ -128,11 +157,15 @@ extension Book {
             coverImageURL: nil,
             progress: 0.2,
             lastPlayedDate: nil,
-            addedAt: Date().addingTimeInterval(-604800) // 7 days ago
+            addedAt: Date().addingTimeInterval(-604800), // 7 days ago
+            publisher: "Random House",
+            publishedYear: "2018",
+            series: nil
         ),
         Book(
             id: "8",
             title: "Harry Potter and the Sorcerer's Stone",
+            subtitle: nil,
             authors: [Author(id: "1", name: "J.K. Rowling")],
             narrators: ["Jim Dale"],
             genres: ["Fantasy", "Young Adult"],
@@ -141,7 +174,10 @@ extension Book {
             coverImageURL: nil,
             progress: 0.65,
             lastPlayedDate: Date().addingTimeInterval(-600), // 10 minutes ago
-            addedAt: Date().addingTimeInterval(-691200) // 8 days ago
+            addedAt: Date().addingTimeInterval(-691200), // 8 days ago
+            publisher: "Scholastic",
+            publishedYear: "1997",
+            series: Serie(id: "harry-potter", name: "Harry Potter", sequence: "1")
         )
     ]
 }

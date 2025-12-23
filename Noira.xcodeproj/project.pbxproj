@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		9901215A2E7CA41900CE13A3 /* AttributedText in Frameworks */ = {isa = PBXBuildFile; productRef = 990121592E7CA41900CE13A3 /* AttributedText */; };
+		99DC50AA2EFB25C4001CC23A /* CLAUDE.md in Resources */ = {isa = PBXBuildFile; fileRef = 99DC50A92EFB25C4001CC23A /* CLAUDE.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		993F36392E7840D80092C600 /* Noira.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Noira.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		99DC50A92EFB25C4001CC23A /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +41,7 @@
 			children = (
 				993F363B2E7840D80092C600 /* Noira */,
 				993F363A2E7840D80092C600 /* Products */,
+				99DC50A92EFB25C4001CC23A /* CLAUDE.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,6 +121,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99DC50AA2EFB25C4001CC23A /* CLAUDE.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,6 +10,7 @@ import Foundation
 struct Book: Codable, Identifiable, Hashable {
     let id: String
     let title: String
+    let subtitle: String?
     let authors: [Author]
     let narrators: [String]
     let genres: [String]
@@ -19,9 +20,13 @@ struct Book: Codable, Identifiable, Hashable {
     let progress: Double // 0.0 to 1.0
     let lastPlayedDate: Date?
     let addedAt: Date?
-    
+    let publisher: String?
+    let publishedYear: String?
+    let series: Serie?
+
     enum CodingKeys: String, CodingKey {
-        case id, title, authors, narrators, genres, description, duration, progress, addedAt
+        case id, title, subtitle, authors, narrators, genres, description, duration, progress, addedAt
+        case publisher, publishedYear, series
         case coverImageURL = "coverPath"
         case lastPlayedDate = "lastPlayed"
     }

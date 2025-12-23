@@ -36,7 +36,8 @@ class AuthenticationService: ObservableObject {
     @Published var isAuthenticated = false
     @Published var currentUser: String?
     @Published var isLoading = false
-    
+    @Published var error: AuthenticationError?
+
     private let userDefaults = UserDefaultsService.shared
     private let urlSession = URLSession.shared
     
@@ -67,17 +68,18 @@ class AuthenticationService: ObservableObject {
         }
     }
     
-    func login(serverURL: String, username: String, password: String) async -> Result<Void, AuthenticationError> {
+    func login(serverURL: String, username: String, password: String) async {
         isLoading = true
+        error = nil
         defer { isLoading = false }
-        
+
         // Normalize server URL - remove trailing slash if present
-        let normalizedServerURL = serverURL.trimmingCharacters(in: .whitespacesAndNewlines)
-            .trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        
+        let normalizedServerURL = serverURL.normalizedServerURL()
+
         // Construct login URL
         guard let loginURL = URL(string: "\(normalizedServerURL)/login") else {
-            return .failure(.invalidURL)
+            error = .invalidURL
+            return
         }
         
         // Create login request
@@ -94,47 +96,46 @@ class AuthenticationService: ObservableObject {
             
             // Make the API call
             let (data, response) = try await urlSession.data(for: request)
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
-                return .failure(.invalidResponse)
+                error = .invalidResponse
+                return
             }
-            
+
             // Check for HTTP errors
             switch httpResponse.statusCode {
             case 200...299:
                 // Success - parse response
                 do {
                     let loginResponse = try JSONDecoder().decode(ABSLoginResponse.self, from: data)
-                    
+
                     // Store all the credentials
                     userDefaults.serverURL = normalizedServerURL
                     userDefaults.username = loginResponse.user.username
                     userDefaults.authToken = loginResponse.user.token
                     userDefaults.libraryId = loginResponse.userDefaultLibraryId
-                    
+
                     isAuthenticated = true
                     currentUser = loginResponse.user.username
-                    
-                    return .success(())
                 } catch {
-                    return .failure(.decodingError(error))
+                    self.error = .decodingError(error)
                 }
-                
+
             case 401:
-                return .failure(.invalidCredentials)
-                
+                error = .invalidCredentials
+
             default:
                 // Try to parse error message from response
                 if let errorResponse = try? JSONDecoder().decode(ABSErrorResponse.self, from: data),
                    let errorMessage = errorResponse.error ?? errorResponse.message {
-                    return .failure(.networkError(NSError(domain: "AudioBookshelf", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])))
+                    error = .networkError(NSError(domain: "AudioBookshelf", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
                 } else {
-                    return .failure(.networkError(NSError(domain: "AudioBookshelf", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Server error: \(httpResponse.statusCode)"])))
+                    error = .networkError(NSError(domain: "AudioBookshelf", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Server error: \(httpResponse.statusCode)"]))
                 }
             }
-            
+
         } catch {
-            return .failure(.networkError(error))
+            self.error = .networkError(error)
         }
     }
     
@@ -151,9 +152,12 @@ class AuthenticationService: ObservableObject {
               !serverURL.isEmpty && !token.isEmpty else {
             return false
         }
-        
+
+        // Normalize server URL
+        let normalizedServerURL = serverURL.normalizedServerURL()
+
         // Test the token by making a request to a simple endpoint
-        guard let url = URL(string: "\(serverURL)/api/me") else {
+        guard let url = URL(string: "\(normalizedServerURL)/api/me") else {
             return false
         }
         

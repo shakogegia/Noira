@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @StateObject private var absLibraryService = ABSLibraryService()
+    @EnvironmentObject var absLibraryService: ABSLibraryService
 
     @State var searchTerm: String = ""
 

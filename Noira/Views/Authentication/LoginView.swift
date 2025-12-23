@@ -12,35 +12,12 @@ struct LoginView: View {
     @State private var serverURL = ""
     @State private var username = ""
     @State private var password = ""
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
 
     var body: some View {
         HStack(alignment: .center) {
-            VStack(spacing: 32) {
-                Image(systemName: "books.vertical")
-                    .font(.system(size: 96))
-                    .foregroundStyle(.gray)
-
-                Text("Noira")
-                    .font(.title3)
-                    .fontWeight(.bold)
-
-                VStack(spacing: 12) {
-                    Text("Audiobookshelf for tvOS")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text(
-                        "Copyright © 2025 Shalva Gegia.\nAll rights reserved."
-                    )
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.all)
+            BrandingView()
+                .frame(maxWidth: .infinity)
+                .padding(.all)
             
             // vertical line
             Rectangle()
@@ -76,7 +53,11 @@ struct LoginView: View {
                     
                     Button(action: {
                         Task {
-                            await handleLogin()
+                            await authService.login(
+                                serverURL: serverURL,
+                                username: username,
+                                password: password
+                            )
                         }
                     }, label: {
                         HStack(spacing: 8) {
@@ -91,11 +72,6 @@ struct LoginView: View {
                             || authService.isLoading
                     )
                     .frame(maxWidth: .infinity)
-                    .alert("Error", isPresented: $showingAlert) {
-                        Button("OK") {}
-                    } message: {
-                        Text(alertMessage)
-                    }
 
                 }
 
@@ -103,23 +79,14 @@ struct LoginView: View {
             .frame(maxWidth: .infinity)
             .padding(.all)
         }
-
-    }
-
-    private func handleLogin() async {
-        let result = await authService.login(
-            serverURL: serverURL,
-            username: username,
-            password: password
-        )
-
-        switch result {
-        case .success:
-            // Login successful, authentication service will handle state updates
-            break
-        case .failure(let error):
-            alertMessage = error.localizedDescription
-            showingAlert = true
+        .alert("Login Error", isPresented: .constant(authService.error != nil)) {
+            Button("OK") {
+                authService.error = nil
+            }
+        } message: {
+            if let error = authService.error {
+                Text(error.localizedDescription)
+            }
         }
     }
 }

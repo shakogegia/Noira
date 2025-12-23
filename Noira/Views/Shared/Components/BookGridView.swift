@@ -38,7 +38,30 @@ struct BookGridView: View {
             } else {
                 LazyVGrid(columns: columns) {
                     ForEach(books) { book in
-                        StandardBookCard(book: book)
+                        NavigationLink(value: Destination.detail(book)) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                // Cover
+                                SquareBookCover(
+                                    url: book.coverImageURL,
+                                    size: 240,
+                                    radius: 8
+                                )
+
+                                // Book info
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(book.title)
+                                        .font(.headline)
+                                        .lineLimit(2)
+
+                                    Text(book.authors.map(\.name).joined(separator: ", "))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(1)
+                                }
+                                .frame(width: 160)
+                            }
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding()

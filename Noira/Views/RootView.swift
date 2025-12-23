@@ -10,42 +10,52 @@ import SwiftUI
 struct RootView: View {
 
     var body: some View {
-        NavigationStack {
-            TabView {
-                // Library
+        TabView {
+            // Library
+            NavigationStack {
                 LibraryView()
-                    .tabItem {
-                        Text("Library")
-                    }
-
-                // Now Playing
-                NowPlayingView()
-                    .tabItem {
-                        Label("Now Playing", systemImage: "waveform")
-                    }
-
-                // Settings
-                SettingsView()
-                    .tabItem {
-                        Text("Settings")
-                    }
-
-                // Search
-                SearchView()
-                    .tabItem {
-                        Image(systemName: "magnifyingglass")
+                    .navigationDestination(for: Destination.self) { destination in
+                        destinationView(for: destination)
                     }
             }
-            .navigationDestination(for: Destination.self) { destination in
-                switch destination {
-                case .detail(let book):
-                    BookDetailView(book: book)
-                case .search:
-                    SearchView()
-                case .settings:
-                    SettingsView()
+            .tabItem {
+                Text("Library")
+            }
+
+            // Now Playing
+            NowPlayingView()
+                .tabItem {
+                    Label("Now Playing", systemImage: "waveform")
                 }
+
+            // Settings
+            SettingsView()
+                .tabItem {
+                    Text("Settings")
+                }
+
+            // Search
+            NavigationStack {
+                SearchView()
+                    .navigationDestination(for: Destination.self) { destination in
+                        destinationView(for: destination)
+                    }
             }
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func destinationView(for destination: Destination) -> some View {
+        switch destination {
+        case .detail(let book):
+            BookDetailView(book: book)
+        case .search:
+            SearchView()
+        case .settings:
+            SettingsView()
         }
     }
 

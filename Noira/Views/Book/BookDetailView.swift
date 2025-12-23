@@ -15,20 +15,7 @@ struct BookDetailView: View {
     @State private var secondaryColor: Color = Color.clear
 
     var body: some View {
-        ZStack {
-            // Background
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    secondaryColor,
-                    prominentColor,
-                    vibrantColor,
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .edgesIgnoringSafeArea(.all)
-
-            HStack(alignment: .center, spacing: 100) {
+        HStack(alignment: .center, spacing: 100) {
                 VStack(alignment: .trailing, spacing: 48) {
                     Spacer()
                         .frame(maxWidth: .infinity)
@@ -122,35 +109,14 @@ struct BookDetailView: View {
                 }
             }
             .padding(.all, 60)
-        }
+        .dynamicGradientBackground(colors: [secondaryColor, prominentColor, vibrantColor])
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea(edges: [.all])
-        .onAppear{
-            extractColors()
-        }
-    }
-
-    private func extractColors() {
-        // Convert SwiftUI Image to UIImage and extract colors
-        DispatchQueue.global(qos: .background).async {
-            // This is a simplified approach - in reality you'd need to
-            // convert the SwiftUI Image to UIImage properly
-            // For now, we'll use a fallback approach with URL
-            if let urlString = book.coverImageURL,
-                let url = URL(string: urlString),
-                let data = try? Data(contentsOf: url),
-                let uiImage = UIImage(data: data)
-            {
-                let prominent = uiImage.prominentSwiftUIColor
-                let vibrant = uiImage.vibrantSwiftUIColor
-                let secondary = uiImage.secondarySwiftUIColor
-                
-                DispatchQueue.main.async {
-                    prominentColor = prominent ?? .clear
-                    vibrantColor = vibrant ?? .clear
-                    secondaryColor = secondary ?? .clear
-                }
-            }
+        .task {
+            let colors = await ImageColorExtractor.extractColors(from: book.coverImageURL)
+            prominentColor = colors.prominent ?? .clear
+            vibrantColor = colors.vibrant ?? .clear
+            secondaryColor = colors.secondary ?? .clear
         }
     }
 }
