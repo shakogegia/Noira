@@ -9,22 +9,13 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var authService: AuthenticationService
-    
-    @StateObject private var userDefaults = UserDefaultsService.shared
-    
-    @State var theme: Theme = .dark
+
+    private let userDefaults = UserDefaultsService.shared
+
     @State var showLogoutAlert: Bool = false
-    
+
     var body: some View {
         Form {
-            Section(header: Text("Audiobookshelf")) {
-                Picker("Library", selection: $theme) {
-                    Text("Dark").tag(Theme.dark)
-                    Text("Light").tag(Theme.light)
-                    Text("System").tag(Theme.system)
-                }
-            }
-
             Section(header: Text("User")) {
                 Button(action: {}) {
                     Text(userDefaults.username ?? "Username")
@@ -61,13 +52,6 @@ struct SettingsView: View {
     }
 }
 
-enum Theme: Hashable {
-    case dark
-    case light
-    case system
-}
-
 #Preview {
     SettingsView()
 }
-
