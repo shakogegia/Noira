@@ -13,6 +13,7 @@ class UserDefaultsService: ObservableObject {
     private let usernameKey = "abs_username"
     private let tokenKey = "abs_auth_token"
     private let libraryIdKey = "library_id"
+    private let deviceIdKey = "device_id"
 
     static let shared = UserDefaultsService()
 
@@ -46,6 +47,15 @@ class UserDefaultsService: ObservableObject {
         didSet {
             UserDefaults.standard.set(libraryId, forKey: libraryIdKey) // Fixed: was using serverURLKey
         }
+    }
+
+    var deviceId: String {
+        if let existing = UserDefaults.standard.string(forKey: deviceIdKey) {
+            return existing
+        }
+        let newId = UUID().uuidString
+        UserDefaults.standard.set(newId, forKey: deviceIdKey)
+        return newId
     }
 
     func clearAll() {
