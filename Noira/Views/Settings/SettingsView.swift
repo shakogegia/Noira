@@ -12,59 +12,42 @@ struct SettingsView: View {
     
     @StateObject private var userDefaults = UserDefaultsService.shared
     
-    @State var showPreview: Bool = false
     @State var theme: Theme = .dark
     @State var showLogoutAlert: Bool = false
     
     var body: some View {
-        HStack(alignment: .center) {
-            BrandingView()
-                .frame(maxWidth: .infinity)
-                .padding(.all)
-            
-            // vertical line
-            Rectangle()
-                .frame(width: 1)
-                .foregroundColor(.gray)
-                .padding(.vertical, 40)
-                
-            NavigationStack {
-                Form {
-                    Section(header: Text("General")) {
-                        Picker("Theme", selection: $theme) {
-                            Text("Dark").tag(Theme.dark)
-                            Text("Light").tag(Theme.light)
-                            Text("System").tag(Theme.system)
-                        }
-                        
-                        Toggle("Show Previews", isOn: $showPreview)
-                    }
-                    
-                    Section(header: Text("Audiobookshelf")) {
-                        Picker("Library", selection: $theme) {
-                            Text("Dark").tag(Theme.dark)
-                            Text("Light").tag(Theme.light)
-                            Text("System").tag(Theme.system)
-                        }
-                    }
-                    
-                    
-                    Section(header: Text("User")) {
-                        Button(action: {}) {
-                            Text(userDefaults.username ?? "Username")
-                        }
-                        .disabled(true)
-                        
-                        
-                        Button(role: .destructive, action: {
-                            showLogoutAlert = true
-                        }, label: {
-                            Text("Sign out")
-                        })
-                    }
+        Form {
+            Section(header: Text("Audiobookshelf")) {
+                Picker("Library", selection: $theme) {
+                    Text("Dark").tag(Theme.dark)
+                    Text("Light").tag(Theme.light)
+                    Text("System").tag(Theme.system)
                 }
-                .padding(.all)
-                .scrollClipDisabled()
+            }
+
+            Section(header: Text("User")) {
+                Button(action: {}) {
+                    Text(userDefaults.username ?? "Username")
+                }
+                .disabled(true)
+
+                Button(role: .destructive, action: {
+                    showLogoutAlert = true
+                }, label: {
+                    Text("Sign out")
+                })
+            }
+        }
+        .padding(.leading, 400)
+        .overlay(alignment: .leading) {
+            HStack(spacing: 0) {
+                BrandingView()
+                    .frame(width: 350)
+
+                Rectangle()
+                    .frame(width: 1)
+                    .foregroundColor(.gray)
+                    .padding(.vertical, 40)
             }
         }
         .alert("Sign out", isPresented: $showLogoutAlert) {
