@@ -12,4 +12,5 @@ enum Destination: Hashable {
     case search
     case settings
     case detail(Book)
+    case nowPlaying(Book)
 }
