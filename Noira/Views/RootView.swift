@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RootView: View {
+    @EnvironmentObject var audioPlayerService: AudioPlayerService
 
     var body: some View {
         TabView {
@@ -23,10 +24,12 @@ struct RootView: View {
             }
 
             // Now Playing
-            NowPlayingView()
-                .tabItem {
-                    Label("Now Playing", systemImage: "waveform")
-                }
+            NavigationStack {
+                NowPlayingView()
+            }
+            .tabItem {
+                Label("Now Playing", systemImage: "waveform")
+            }
 
             // Settings
             SettingsView()
@@ -52,6 +55,8 @@ struct RootView: View {
         switch destination {
         case .detail(let book):
             BookDetailView(book: book)
+        case .nowPlaying(let book):
+            NowPlayingView(bookToPlay: book)
         case .search:
             SearchView()
         case .settings:

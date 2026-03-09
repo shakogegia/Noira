@@ -10,6 +10,7 @@ import AttributedText
 
 struct BookDetailView: View {
     let book: Book
+    @EnvironmentObject var audioPlayerService: AudioPlayerService
     @State private var prominentColor: Color = Color.clear
     @State private var vibrantColor: Color = Color.clear
     @State private var secondaryColor: Color = Color.clear
@@ -43,17 +44,12 @@ struct BookDetailView: View {
                         .foregroundColor(.secondary)
                     }
 
-                    Button(
-                        action: {
-
-                        },
-                        label: {
-                            HStack(spacing: 12) {
-                                Image(systemName: "play.fill")
-                                Text("Play")
-                            }
+                    NavigationLink(value: Destination.nowPlaying(book)) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "play.fill")
+                            Text(book.progress > 0 ? "Continue" : "Play")
                         }
-                    )
+                    }
 
                     // Duration
                     if !book.narrators.isEmpty {
@@ -63,6 +59,18 @@ struct BookDetailView: View {
                                 .foregroundColor(.secondary)
 
                             Text(book.formattedDuration)
+                                .font(.caption)
+                        }
+                    }
+
+                    // Progress
+                    if book.progress > 0 {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Progress")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            Text("\(Int(book.progress * 100))%")
                                 .font(.caption)
                         }
                     }
@@ -96,7 +104,7 @@ struct BookDetailView: View {
                         }
                     }
 
-                    // Genres
+                    // Description
                     if !book.description.isEmpty {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Description")
@@ -122,13 +130,15 @@ struct BookDetailView: View {
 }
 
 #Preview("Book 1") {
-    NavigationView {
-        BookDetailView(book: Book.sampleBooks[0])  // The Hobbit with 30% progress
+    NavigationStack {
+        BookDetailView(book: Book.sampleBooks[0])
+            .environmentObject(AudioPlayerService())
     }
 }
 
 #Preview("Book 2") {
-    NavigationView {
-        BookDetailView(book: Book.sampleBooks[1])  // Dune with 0% progress
+    NavigationStack {
+        BookDetailView(book: Book.sampleBooks[1])
+            .environmentObject(AudioPlayerService())
     }
 }

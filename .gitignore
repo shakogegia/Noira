@@ -1,1 +1,8 @@
 credentials.md
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad/
+.DS_Store
+*.swp
+*.swo

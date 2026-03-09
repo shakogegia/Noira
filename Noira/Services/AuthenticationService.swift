@@ -42,9 +42,6 @@ class AuthenticationService: ObservableObject {
     private let urlSession = URLSession.shared
     
     func checkAuthentication() {
-        print("check")
-        print(userDefaults.authToken, userDefaults.serverURL, userDefaults.username)
-        print("check end")
         // Check if we have stored credentials
         if let token = userDefaults.authToken,
            let serverURL = userDefaults.serverURL,
