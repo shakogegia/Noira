@@ -54,21 +54,25 @@ class ABSLibraryService: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         do {
-            // Make the API call
-            let (data, response) = try await urlSession.data(for: request)
-            
+            // Fetch library items and user progress concurrently
+            async let progressList = fetchUserProgress(serverURL: normalizedServerURL, authToken: authToken)
+            async let libraryData = urlSession.data(for: request)
+
+            let (data, response) = try await libraryData
+            let mediaProgress = await progressList
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 error = .networkError(NSError(domain: "LibraryService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response"]))
                 return
             }
-            
+
             // Check for HTTP errors
             switch httpResponse.statusCode {
             case 200...299:
                 // Success - parse the response
                 do {
                     let libraryResponse = try JSONDecoder().decode(ABSLibraryItemsResponse.self, from: data)
-                    books = ABSLibraryItemMapper.mapToBooks(from: libraryResponse.results, serverURL: normalizedServerURL)
+                    books = ABSLibraryItemMapper.mapToBooks(from: libraryResponse.results, serverURL: normalizedServerURL, mediaProgress: mediaProgress)
                 } catch {
                     self.error = .decodingError(error)
                 }
@@ -79,6 +83,24 @@ class ABSLibraryService: ObservableObject {
 
         } catch {
             self.error = .networkError(error)
+        }
+    }
+
+    // MARK: - Private Methods
+
+    private func fetchUserProgress(serverURL: String, authToken: String) async -> [ABSMediaProgress] {
+        guard let url = URL(string: "\(serverURL)/api/me") else { return [] }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        do {
+            let (data, response) = try await urlSession.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else { return [] }
+            let meResponse = try JSONDecoder().decode(ABSMeResponse.self, from: data)
+            return meResponse.mediaProgress
+        } catch {
+            return []
         }
     }
 }

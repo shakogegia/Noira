@@ -11,10 +11,13 @@ struct ABSLibraryItemMapper {
     /// Maps API library items to app Book models
     static func mapToBooks(
         from items: [ABSLibraryItem],
-        serverURL: String
+        serverURL: String,
+        mediaProgress: [ABSMediaProgress] = []
     ) -> [Book] {
+        let progressLookup = Dictionary(mediaProgress.map { ($0.libraryItemId, $0) }, uniquingKeysWith: { first, _ in first })
+
         let books = items.compactMap { item -> Book? in
-            mapToBook(from: item, serverURL: serverURL)
+            mapToBook(from: item, serverURL: serverURL, progress: progressLookup[item.id])
         }
 
         // Sort by addedAt descending (newest first)
@@ -23,7 +26,7 @@ struct ABSLibraryItemMapper {
 
     // MARK: - Private Mapping Methods
 
-    private static func mapToBook(from item: ABSLibraryItem, serverURL: String) -> Book? {
+    private static func mapToBook(from item: ABSLibraryItem, serverURL: String, progress: ABSMediaProgress? = nil) -> Book? {
         // Only process book media types
         guard item.mediaType == "book" else { return nil }
 
@@ -33,6 +36,9 @@ struct ABSLibraryItemMapper {
         let coverURL = buildCoverURL(coverPath: item.media.coverPath, itemId: item.id, serverURL: serverURL)
         let series = mapSeries(from: metadata)
         let addedAt = mapDate(from: item.addedAt)
+
+        let bookProgress = progress?.progress ?? 0.0
+        let lastPlayed: Date? = progress.map { Date(timeIntervalSince1970: TimeInterval($0.lastUpdate) / 1000) }
 
         return Book(
             id: item.id,
@@ -44,8 +50,8 @@ struct ABSLibraryItemMapper {
             description: metadata.description ?? "",
             duration: item.media.duration ?? 0,
             coverImageURL: coverURL,
-            progress: 0.0, // TODO: Fetch from progress endpoint
-            lastPlayedDate: nil, // TODO: Fetch from progress endpoint
+            progress: bookProgress,
+            lastPlayedDate: lastPlayed,
             addedAt: addedAt,
             publisher: metadata.publisher,
             publishedYear: metadata.publishedYear,
