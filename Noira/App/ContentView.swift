@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var authService = AuthenticationService()
     @StateObject private var absLibraryService = ABSLibraryService()
+    @StateObject private var audioPlayerService = AudioPlayerService()
 
     var body: some View {
         Group {
@@ -17,6 +18,7 @@ struct ContentView: View {
                 RootView()
                     .environmentObject(authService)
                     .environmentObject(absLibraryService)
+                    .environmentObject(audioPlayerService)
             } else {
                 LoginView()
                     .environmentObject(authService)
